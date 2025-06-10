@@ -6,5 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoginResponse {
-    private String msg;
+    private String token;
+    private Long expiresIn;
 }

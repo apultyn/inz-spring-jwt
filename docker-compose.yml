@@ -1,0 +1,13 @@
+services:
+  database:
+    image: mysql:9.3
+    container_name: spring-jwt-db
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=my-secret-pwd
+      - MYSQL_DATABASE=spring-jwt-db
+    volumes:
+      - spring-jwt-data:/var/lib/mysql
+volumes:
+  spring-jwt-data:

@@ -15,6 +15,11 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
+    public Book findBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+    }
+
     public Set<BookDTO> getBooks() {
         List<Book> books = bookRepository.findAll();
         return books.stream()

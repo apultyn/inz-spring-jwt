@@ -4,6 +4,7 @@ import com.pultyn.spring_jwt.dto.ReviewDTO;
 import com.pultyn.spring_jwt.request.ReviewRequest;
 import com.pultyn.spring_jwt.response.RegisterResponse;
 import com.pultyn.spring_jwt.service.ReviewService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ public class ReviewController {
     }
 
     @PostMapping("/create")
+    @Transactional
     public ResponseEntity<?> createReview(@RequestBody ReviewRequest reviewRequest) {
         ReviewDTO review = reviewService.createReview(reviewRequest);
         return new ResponseEntity<ReviewDTO>(review, HttpStatus.CREATED);

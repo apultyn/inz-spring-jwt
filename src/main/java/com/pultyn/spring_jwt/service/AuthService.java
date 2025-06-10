@@ -10,6 +10,10 @@ import com.pultyn.spring_jwt.response.LoginResponse;
 import com.pultyn.spring_jwt.response.RegisterResponse;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +30,9 @@ public class AuthService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private AuthenticationManager authManager;
 
     public RegisterResponse register(RegisterDTO registerDTO) {
         if (userRepository.existsByEmail(registerDTO.getEmail())) {
@@ -44,6 +51,14 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginDTO loginDTO) {
-        return new LoginResponse("Logged in");
+        Authentication auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
+        );
+        if (auth.isAuthenticated()) {
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            return new LoginResponse("Logged in");
+        } else {
+            throw new IllegalArgumentException("Not authenticated");
+        }
     }
 }

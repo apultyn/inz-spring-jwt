@@ -1,9 +1,9 @@
-package com.pultyn.spring_jwt.dto;
+package com.pultyn.spring_jwt.request;
 
 import lombok.Data;
 
 @Data
-public class LoginDTO {
+public class LoginRequest {
     private String email;
     private String password;
 }

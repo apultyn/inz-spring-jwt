@@ -1,7 +1,7 @@
 package com.pultyn.spring_jwt.controller;
 
-import com.pultyn.spring_jwt.dto.LoginDTO;
-import com.pultyn.spring_jwt.dto.RegisterDTO;
+import com.pultyn.spring_jwt.request.LoginRequest;
+import com.pultyn.spring_jwt.request.RegisterRequest;
 import com.pultyn.spring_jwt.response.LoginResponse;
 import com.pultyn.spring_jwt.response.RegisterResponse;
 import com.pultyn.spring_jwt.service.AuthService;
@@ -20,9 +20,9 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
+    public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            RegisterResponse response = authService.register(registerDTO);
+            RegisterResponse response = authService.register(registerRequest);
             return new ResponseEntity<RegisterResponse>(response, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -30,9 +30,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            LoginResponse response = authService.login(loginDTO);
+            LoginResponse response = authService.login(loginRequest);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());

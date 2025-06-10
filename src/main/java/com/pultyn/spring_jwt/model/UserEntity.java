@@ -1,7 +1,10 @@
 package com.pultyn.spring_jwt.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -29,4 +32,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
     )
     private List<Role> roles;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Review> reviews;
 }

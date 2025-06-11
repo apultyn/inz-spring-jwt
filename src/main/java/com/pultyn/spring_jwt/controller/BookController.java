@@ -6,6 +6,8 @@ import com.pultyn.spring_jwt.request.CreateBookRequest;
 import com.pultyn.spring_jwt.request.UpdateBookRequest;
 import com.pultyn.spring_jwt.service.BookService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ public class BookController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createBook(@RequestBody CreateBookRequest bookRequest) {
+    public ResponseEntity<?> createBook(@Valid @RequestBody CreateBookRequest bookRequest) {
         BookDTO book = bookService.createBook(bookRequest);
         return new ResponseEntity<BookDTO>(book, HttpStatus.CREATED);
     }
@@ -37,8 +39,8 @@ public class BookController {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ResponseEntity<BookDTO> updateBook(
-            @PathVariable Long bookId,
-            @RequestBody UpdateBookRequest bookRequest
+            @NotNull @PathVariable Long bookId,
+            @Valid @RequestBody UpdateBookRequest bookRequest
     ) throws NotFoundException {
         BookDTO updatedBook = bookService.updateBook(bookId, bookRequest);
         return ResponseEntity.ok(updatedBook);
@@ -47,7 +49,7 @@ public class BookController {
     @DeleteMapping("/{bookId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ResponseEntity<?> deleteBook(@PathVariable Long bookId) throws NotFoundException {
+    public ResponseEntity<?> deleteBook(@NotNull @PathVariable Long bookId) throws NotFoundException {
         bookService.deleteBook(bookId);
         return ResponseEntity.noContent().build();
     }

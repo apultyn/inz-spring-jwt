@@ -6,14 +6,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestControllerAdvice
@@ -67,20 +73,41 @@ public class GlobalExceptionHandler {
         return errorDetail;
     }
 
-    @ExceptionHandler(InvalidDataException.class)
-    public ProblemDetail handleException(InvalidDataException ex) {
-        return build(
-                HttpStatusCode.valueOf(400),
-                ex,
-                "Form contains invalid data");
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleException(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
+
+        Map<String, String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(Collectors.toMap(
+                        FieldError::getField,
+                        FieldError::getDefaultMessage,
+                        (m1, m2) -> m1));
+
+        ProblemDetail error = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed");
+
+        error.setProperty("violations", errors);
+        error.setProperty("path", request.getRequestURI());
+        return error;
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleException(DataIntegrityViolationException ex) {
+        ProblemDetail error = ProblemDetail.forStatus(HttpStatusCode.valueOf(403));
+        error.setProperty("description", "Data integrity violated");
+        return error;
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ProblemDetail handleException(NoResourceFoundException ex) {
         return build(
-                HttpStatusCode.valueOf(403),
+                HttpStatusCode.valueOf(404),
                 ex,
-                "Data integrity violated"
+                "Resource not found"
         );
     }
 

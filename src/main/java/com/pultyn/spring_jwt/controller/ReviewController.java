@@ -1,13 +1,13 @@
 package com.pultyn.spring_jwt.controller;
 
-import com.pultyn.spring_jwt.dto.BookDTO;
 import com.pultyn.spring_jwt.dto.ReviewDTO;
-import com.pultyn.spring_jwt.exceptions.InvalidDataException;
 import com.pultyn.spring_jwt.exceptions.NotFoundException;
 import com.pultyn.spring_jwt.request.CreateReviewRequest;
 import com.pultyn.spring_jwt.request.UpdateReviewRequest;
 import com.pultyn.spring_jwt.service.ReviewService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +27,8 @@ public class ReviewController {
 
     @PostMapping("/create")
     @Transactional
-    public ResponseEntity<?> createReview(@RequestBody CreateReviewRequest createReviewRequest)
-            throws InvalidDataException, NotFoundException {
+    public ResponseEntity<?> createReview(@Valid @RequestBody CreateReviewRequest createReviewRequest)
+            throws NotFoundException {
         ReviewDTO review = reviewService.createReview(createReviewRequest);
         return new ResponseEntity<ReviewDTO>(review, HttpStatus.CREATED);
     }
@@ -37,9 +37,9 @@ public class ReviewController {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ResponseEntity<ReviewDTO> updateReview(
-            @PathVariable Long reviewId,
-            @RequestBody UpdateReviewRequest reviewRequest
-    ) throws InvalidDataException, NotFoundException {
+            @NotNull @PathVariable Long reviewId,
+            @Valid @RequestBody UpdateReviewRequest reviewRequest
+    ) throws NotFoundException {
         ReviewDTO review = reviewService.updateReview(reviewId, reviewRequest);
         return ResponseEntity.ok(review);
     }
@@ -47,7 +47,7 @@ public class ReviewController {
     @DeleteMapping("/{reviewId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) throws NotFoundException {
+    public ResponseEntity<?> deleteReview(@NotNull @PathVariable Long reviewId) throws NotFoundException {
         reviewService.deleteReview(reviewId);
         return ResponseEntity.noContent().build();
     }

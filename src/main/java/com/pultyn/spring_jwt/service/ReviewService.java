@@ -1,7 +1,6 @@
 package com.pultyn.spring_jwt.service;
 
 import com.pultyn.spring_jwt.dto.ReviewDTO;
-import com.pultyn.spring_jwt.exceptions.InvalidDataException;
 import com.pultyn.spring_jwt.exceptions.NotFoundException;
 import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.model.Review;
@@ -38,7 +37,7 @@ public class ReviewService {
     }
 
     public ReviewDTO createReview(CreateReviewRequest createReviewRequest)
-            throws NotFoundException, InvalidDataException {
+            throws NotFoundException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long userId = ((CustomUserDetails) auth.getPrincipal()).getId();
 
@@ -52,29 +51,21 @@ public class ReviewService {
                 .comment(createReviewRequest.getComment())
                 .build();
 
-        if (review.verifyReview()) {
-            return new ReviewDTO(reviewRepository.save(review));
-        } else {
-            throw new InvalidDataException("Star value must be between 0-5");
-        }
+        return new ReviewDTO(reviewRepository.save(review));
     }
 
     public ReviewDTO updateReview(
             Long reviewId,
             UpdateReviewRequest reviewRequest
-    ) throws NotFoundException, InvalidDataException {
+    ) throws NotFoundException {
         Review reviewToUpdate = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review not found"));
 
         reviewToUpdate.setStars(reviewToUpdate.getStars());
         reviewToUpdate.setComment(reviewToUpdate.getComment());
 
-        if (reviewToUpdate.verifyReview()) {
-            reviewRepository.save(reviewToUpdate);
-            return new ReviewDTO(reviewToUpdate);
-        } else {
-            throw new InvalidDataException("Star value must be between 0-5");
-        }
+        reviewRepository.save(reviewToUpdate);
+        return new ReviewDTO(reviewToUpdate);
     }
 
     public void deleteReview(Long reviewId) throws NotFoundException {

@@ -1,6 +1,8 @@
 package com.pultyn.spring_jwt.service;
 
 import com.pultyn.spring_jwt.dto.ReviewDTO;
+import com.pultyn.spring_jwt.exceptions.InvalidDataException;
+import com.pultyn.spring_jwt.exceptions.NotFoundException;
 import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.model.Review;
 import com.pultyn.spring_jwt.model.UserEntity;
@@ -35,7 +37,8 @@ public class ReviewService {
                 .collect(Collectors.toSet());
     }
 
-    public ReviewDTO createReview(CreateReviewRequest createReviewRequest) {
+    public ReviewDTO createReview(CreateReviewRequest createReviewRequest)
+            throws NotFoundException, InvalidDataException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long userId = ((CustomUserDetails) auth.getPrincipal()).getId();
 
@@ -52,16 +55,16 @@ public class ReviewService {
         if (review.verifyReview()) {
             return new ReviewDTO(reviewRepository.save(review));
         } else {
-            throw new IllegalArgumentException("Review invalid");
+            throw new InvalidDataException("Star value must be between 0-5");
         }
     }
 
     public ReviewDTO updateReview(
             Long reviewId,
             UpdateReviewRequest reviewRequest
-    ) {
+    ) throws NotFoundException, InvalidDataException {
         Review reviewToUpdate = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+                .orElseThrow(() -> new NotFoundException("Review not found"));
 
         reviewToUpdate.setStars(reviewToUpdate.getStars());
         reviewToUpdate.setComment(reviewToUpdate.getComment());
@@ -70,13 +73,13 @@ public class ReviewService {
             reviewRepository.save(reviewToUpdate);
             return new ReviewDTO(reviewToUpdate);
         } else {
-            throw new IllegalArgumentException("Review invalid");
+            throw new InvalidDataException("Star value must be between 0-5");
         }
     }
 
-    public void deleteReview(Long reviewId) {
+    public void deleteReview(Long reviewId) throws NotFoundException {
         Review review = reviewRepository.findById(reviewId)
-                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+                .orElseThrow(() -> new NotFoundException("Review not found"));
 
         reviewRepository.delete(review);
     }

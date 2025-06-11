@@ -1,6 +1,7 @@
 package com.pultyn.spring_jwt.service;
 
 import com.pultyn.spring_jwt.dto.BookDTO;
+import com.pultyn.spring_jwt.exceptions.NotFoundException;
 import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.repository.BookRepository;
 import com.pultyn.spring_jwt.request.CreateBookRequest;
@@ -40,16 +41,16 @@ public class BookService {
         return new BookDTO(bookRepository.save(book));
     }
 
-    public void deleteBook(Long bookId) {
+    public void deleteBook(Long bookId) throws NotFoundException {
         Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+                .orElseThrow(() -> new NotFoundException("Book not found"));
 
         bookRepository.delete(book);
     }
 
-    public BookDTO updateBook(Long bookId, UpdateBookRequest bookRequest) {
+    public BookDTO updateBook(Long bookId, UpdateBookRequest bookRequest) throws NotFoundException {
         Book bookToUpdate = bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+                .orElseThrow(() -> new NotFoundException("Book not found"));
 
         bookToUpdate.setAuthor(bookRequest.getAuthor());
         bookToUpdate.setTitle(bookRequest.getTitle());

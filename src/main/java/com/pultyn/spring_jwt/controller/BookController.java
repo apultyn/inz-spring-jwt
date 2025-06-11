@@ -1,6 +1,7 @@
 package com.pultyn.spring_jwt.controller;
 
 import com.pultyn.spring_jwt.dto.BookDTO;
+import com.pultyn.spring_jwt.exceptions.NotFoundException;
 import com.pultyn.spring_jwt.request.CreateBookRequest;
 import com.pultyn.spring_jwt.request.UpdateBookRequest;
 import com.pultyn.spring_jwt.service.BookService;
@@ -35,28 +36,19 @@ public class BookController {
     @PutMapping("/{bookId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ResponseEntity<?> updateBook(
+    public ResponseEntity<BookDTO> updateBook(
             @PathVariable Long bookId,
             @RequestBody UpdateBookRequest bookRequest
-    ) {
-        try {
-            BookDTO updatedBook = bookService.updateBook(bookId, bookRequest);
-            return ResponseEntity.ok(updatedBook);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-
+    ) throws NotFoundException {
+        BookDTO updatedBook = bookService.updateBook(bookId, bookRequest);
+        return ResponseEntity.ok(updatedBook);
     }
 
     @DeleteMapping("/{bookId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ResponseEntity<?> deleteBook(@PathVariable Long bookId) {
-        try {
-            bookService.deleteBook(bookId);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> deleteBook(@PathVariable Long bookId) throws NotFoundException {
+        bookService.deleteBook(bookId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -2,6 +2,8 @@ package com.pultyn.spring_jwt.controller;
 
 import com.pultyn.spring_jwt.dto.BookDTO;
 import com.pultyn.spring_jwt.dto.ReviewDTO;
+import com.pultyn.spring_jwt.exceptions.InvalidDataException;
+import com.pultyn.spring_jwt.exceptions.NotFoundException;
 import com.pultyn.spring_jwt.request.CreateReviewRequest;
 import com.pultyn.spring_jwt.request.UpdateReviewRequest;
 import com.pultyn.spring_jwt.service.ReviewService;
@@ -25,7 +27,8 @@ public class ReviewController {
 
     @PostMapping("/create")
     @Transactional
-    public ResponseEntity<?> createReview(@RequestBody CreateReviewRequest createReviewRequest) {
+    public ResponseEntity<?> createReview(@RequestBody CreateReviewRequest createReviewRequest)
+            throws InvalidDataException, NotFoundException {
         ReviewDTO review = reviewService.createReview(createReviewRequest);
         return new ResponseEntity<ReviewDTO>(review, HttpStatus.CREATED);
     }
@@ -33,27 +36,19 @@ public class ReviewController {
     @PutMapping("/{reviewId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ResponseEntity<?> updateReview(
+    public ResponseEntity<ReviewDTO> updateReview(
             @PathVariable Long reviewId,
             @RequestBody UpdateReviewRequest reviewRequest
-    ) {
-        try {
-            ReviewDTO review = reviewService.updateReview(reviewId, reviewRequest);
-            return ResponseEntity.ok(review);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    ) throws InvalidDataException, NotFoundException {
+        ReviewDTO review = reviewService.updateReview(reviewId, reviewRequest);
+        return ResponseEntity.ok(review);
     }
 
     @DeleteMapping("/{reviewId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) {
-        try {
-            reviewService.deleteReview(reviewId);
-            return ResponseEntity.noContent().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> deleteReview(@PathVariable Long reviewId) throws NotFoundException {
+        reviewService.deleteReview(reviewId);
+        return ResponseEntity.noContent().build();
     }
 }

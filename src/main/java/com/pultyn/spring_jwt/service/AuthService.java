@@ -57,13 +57,9 @@ public class AuthService {
         Authentication auth = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
-        if (auth.isAuthenticated()) {
-            UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
-                    .orElseThrow(() -> new IllegalStateException("User can't be authenticated and not be in database"));
-            String jwtToken = jwtService.generateToken(user);
-            return new LoginResponse(jwtToken, jwtService.getJwtExpiration());
-        } else {
-            throw new IllegalArgumentException("Not authenticated");
-        }
+        UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new IllegalStateException("User can't be authenticated and not be in database"));
+        String jwtToken = jwtService.generateToken(user);
+        return new LoginResponse(jwtToken, jwtService.getJwtExpiration());
     }
 }

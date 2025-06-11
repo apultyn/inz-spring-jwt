@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class NewBookRequest {
-    private String title;
-    private String author;
+public class UpdateReviewRequest {
+    private int stars;
+    private String comment;
 }

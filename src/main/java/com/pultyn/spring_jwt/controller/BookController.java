@@ -1,16 +1,16 @@
 package com.pultyn.spring_jwt.controller;
 
 import com.pultyn.spring_jwt.dto.BookDTO;
-import com.pultyn.spring_jwt.model.Book;
-import com.pultyn.spring_jwt.request.NewBookRequest;
+import com.pultyn.spring_jwt.request.CreateBookRequest;
+import com.pultyn.spring_jwt.request.UpdateBookRequest;
 import com.pultyn.spring_jwt.service.BookService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -27,8 +27,36 @@ public class BookController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> createBook(@RequestBody NewBookRequest bookRequest) {
+    public ResponseEntity<?> createBook(@RequestBody CreateBookRequest bookRequest) {
         BookDTO book = bookService.createBook(bookRequest);
         return new ResponseEntity<BookDTO>(book, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{bookId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public ResponseEntity<?> updateBook(
+            @PathVariable Long bookId,
+            @RequestBody UpdateBookRequest bookRequest
+    ) {
+        try {
+            BookDTO updatedBook = bookService.updateBook(bookId, bookRequest);
+            return ResponseEntity.ok(updatedBook);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
+
+    @DeleteMapping("/{bookId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public ResponseEntity<?> deleteBook(@PathVariable Long bookId) {
+        try {
+            bookService.deleteBook(bookId);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

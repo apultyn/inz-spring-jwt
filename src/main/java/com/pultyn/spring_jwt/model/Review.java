@@ -31,4 +31,8 @@ public class Review {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
+
+    public Boolean verifyReview() {
+        return stars >= 0 && stars <= 5;
+    }
 }

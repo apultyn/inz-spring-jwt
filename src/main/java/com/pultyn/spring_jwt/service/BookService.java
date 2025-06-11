@@ -3,7 +3,8 @@ package com.pultyn.spring_jwt.service;
 import com.pultyn.spring_jwt.dto.BookDTO;
 import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.repository.BookRepository;
-import com.pultyn.spring_jwt.request.NewBookRequest;
+import com.pultyn.spring_jwt.request.CreateBookRequest;
+import com.pultyn.spring_jwt.request.UpdateBookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class BookService {
                 .collect(Collectors.toSet());
     }
 
-    public BookDTO createBook(NewBookRequest bookRequest) {
+    public BookDTO createBook(CreateBookRequest bookRequest) {
         Book book = Book.builder()
                 .title(bookRequest.getTitle())
                 .author(bookRequest.getAuthor())
@@ -37,5 +38,24 @@ public class BookService {
                 .build();
 
         return new BookDTO(bookRepository.save(book));
+    }
+
+    public void deleteBook(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        bookRepository.delete(book);
+    }
+
+    public BookDTO updateBook(Long bookId, UpdateBookRequest bookRequest) {
+        Book bookToUpdate = bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+
+        bookToUpdate.setAuthor(bookRequest.getAuthor());
+        bookToUpdate.setTitle(bookRequest.getTitle());
+
+        bookRepository.save(bookToUpdate);
+
+        return new BookDTO(bookToUpdate);
     }
 }

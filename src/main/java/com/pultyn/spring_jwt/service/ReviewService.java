@@ -5,12 +5,12 @@ import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.model.Review;
 import com.pultyn.spring_jwt.model.UserEntity;
 import com.pultyn.spring_jwt.repository.ReviewRepository;
-import com.pultyn.spring_jwt.request.ReviewRequest;
+import com.pultyn.spring_jwt.request.CreateReviewRequest;
+import com.pultyn.spring_jwt.request.UpdateReviewRequest;
 import com.pultyn.spring_jwt.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,20 +35,49 @@ public class ReviewService {
                 .collect(Collectors.toSet());
     }
 
-    public ReviewDTO createReview(ReviewRequest reviewRequest) {
+    public ReviewDTO createReview(CreateReviewRequest createReviewRequest) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long userId = ((CustomUserDetails) auth.getPrincipal()).getId();
 
         UserEntity user = userService.findUserById(userId);
-        Book book = bookService.findBookById(reviewRequest.getBookId());
+        Book book = bookService.findBookById(createReviewRequest.getBookId());
 
         Review review = Review.builder()
                 .book(book)
                 .user(user)
-                .stars(reviewRequest.getStars())
-                .comment(reviewRequest.getComment())
+                .stars(createReviewRequest.getStars())
+                .comment(createReviewRequest.getComment())
                 .build();
 
-        return new ReviewDTO(reviewRepository.save(review));
+        if (review.verifyReview()) {
+            return new ReviewDTO(reviewRepository.save(review));
+        } else {
+            throw new IllegalArgumentException("Review invalid");
+        }
+    }
+
+    public ReviewDTO updateReview(
+            Long reviewId,
+            UpdateReviewRequest reviewRequest
+    ) {
+        Review reviewToUpdate = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+
+        reviewToUpdate.setStars(reviewToUpdate.getStars());
+        reviewToUpdate.setComment(reviewToUpdate.getComment());
+
+        if (reviewToUpdate.verifyReview()) {
+            reviewRepository.save(reviewToUpdate);
+            return new ReviewDTO(reviewToUpdate);
+        } else {
+            throw new IllegalArgumentException("Review invalid");
+        }
+    }
+
+    public void deleteReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new IllegalArgumentException("Review not found"));
+
+        reviewRepository.delete(review);
     }
 }

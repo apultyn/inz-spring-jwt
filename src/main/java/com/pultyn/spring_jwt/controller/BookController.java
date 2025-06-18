@@ -23,8 +23,8 @@ public class BookController {
     private BookService bookService;
 
     @GetMapping("")
-    public ResponseEntity<?> getBooks() {
-        Set<BookDTO> books = bookService.getBooks();
+    public ResponseEntity<?> getBooks(@RequestParam(defaultValue = "") String searchString) {
+        Set<BookDTO> books = bookService.getBooks(searchString);
         return ResponseEntity.ok(books);
     }
 

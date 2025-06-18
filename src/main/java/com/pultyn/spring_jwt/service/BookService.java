@@ -24,8 +24,8 @@ public class BookService {
                 .orElseThrow(() -> new IllegalArgumentException("Book not found"));
     }
 
-    public Set<BookDTO> getBooks() {
-        List<Book> books = bookRepository.findAll();
+    public Set<BookDTO> getBooks(String searchString) {
+        List<Book> books = bookRepository.searchBooks(searchString);
         return books.stream()
                 .map(BookDTO::new)
                 .collect(Collectors.toSet());

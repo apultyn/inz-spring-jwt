@@ -56,9 +56,17 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ExpiredJwtException.class)
     public ProblemDetail handleException(ExpiredJwtException ex) {
         return build(
-                HttpStatusCode.valueOf(403),
+                HttpStatusCode.valueOf(401),
                 ex,
                 "The JWT token has expired");
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ProblemDetail handleException(SignatureException ex) {
+        return build(
+                HttpStatusCode.valueOf(401),
+                ex,
+                "The JWT token is invalid");
     }
 
     @ExceptionHandler(NotFoundException.class)

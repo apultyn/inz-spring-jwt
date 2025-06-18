@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class CreateBookRequest {
     @NotBlank(message = "title required")
     @Size(max = 255, message = "title may not exceed 255 characters")

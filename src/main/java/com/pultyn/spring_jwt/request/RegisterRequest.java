@@ -3,9 +3,11 @@ package com.pultyn.spring_jwt.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class RegisterRequest {
     @NotBlank(message = "email may not be blank")
     @Email(message = "invalid email format")

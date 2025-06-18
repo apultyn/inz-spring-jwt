@@ -19,16 +19,16 @@ public class BookService {
     @Autowired
     private BookRepository bookRepository;
 
-    public Book findBookById(Long bookId) {
+    public Book findBookById(Long bookId) throws NotFoundException {
         return bookRepository.findById(bookId)
-                .orElseThrow(() -> new IllegalArgumentException("Book not found"));
+                .orElseThrow(() -> new NotFoundException("Book not found"));
     }
 
-    public Set<BookDTO> getBooks(String searchString) {
+    public List<BookDTO> getBooks(String searchString) {
         List<Book> books = bookRepository.searchBooks(searchString);
         return books.stream()
                 .map(BookDTO::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     public BookDTO createBook(CreateBookRequest bookRequest) {

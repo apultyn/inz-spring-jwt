@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -24,7 +25,7 @@ public class BookController {
 
     @GetMapping("")
     public ResponseEntity<?> getBooks(@RequestParam(defaultValue = "") String searchString) {
-        Set<BookDTO> books = bookService.getBooks(searchString);
+        List<BookDTO> books = bookService.getBooks(searchString);
         return ResponseEntity.ok(books);
     }
 

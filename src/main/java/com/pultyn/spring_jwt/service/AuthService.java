@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Service
@@ -48,6 +49,7 @@ public class AuthService {
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .roles(Collections.singletonList(role))
+                .reviews(new ArrayList<>())
                 .build();
         userRepository.save(user);
         return new RegisterResponse(String.format("%s registered!", user.getEmail()));

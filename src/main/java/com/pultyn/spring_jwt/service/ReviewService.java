@@ -10,12 +10,12 @@ import com.pultyn.spring_jwt.request.CreateReviewRequest;
 import com.pultyn.spring_jwt.request.UpdateReviewRequest;
 import com.pultyn.spring_jwt.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,11 +29,12 @@ public class ReviewService {
     @Autowired
     private BookService bookService;
 
-    public Set<ReviewDTO> getBookReviews(Long bookId) {
+    public List<ReviewDTO> getBookReviews(Long bookId) {
         List<Review> reviews = reviewRepository.findByBookId(bookId);
+
         return reviews.stream()
                 .map(ReviewDTO::new)
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     public ReviewDTO createReview(CreateReviewRequest createReviewRequest)
@@ -50,8 +51,11 @@ public class ReviewService {
                 .stars(createReviewRequest.getStars())
                 .comment(createReviewRequest.getComment())
                 .build();
-
-        return new ReviewDTO(reviewRepository.save(review));
+        try {
+            return new ReviewDTO(reviewRepository.save(review));
+        } catch(DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("User can write max 1 review per book");
+        }
     }
 
     public ReviewDTO updateReview(

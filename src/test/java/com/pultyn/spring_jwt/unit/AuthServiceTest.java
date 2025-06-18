@@ -1,6 +1,5 @@
 package com.pultyn.spring_jwt.unit;
 
-import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.model.Role;
 import com.pultyn.spring_jwt.model.UserEntity;
 import com.pultyn.spring_jwt.repository.RoleRepository;
@@ -21,15 +20,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
-import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {

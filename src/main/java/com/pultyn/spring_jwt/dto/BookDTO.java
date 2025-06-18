@@ -1,13 +1,9 @@
 package com.pultyn.spring_jwt.dto;
 
 import com.pultyn.spring_jwt.model.Book;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data

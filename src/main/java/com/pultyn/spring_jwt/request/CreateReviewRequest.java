@@ -1,7 +1,6 @@
 package com.pultyn.spring_jwt.request;
 
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data

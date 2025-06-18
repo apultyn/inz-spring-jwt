@@ -1,11 +1,11 @@
 package com.pultyn.spring_jwt.service;
 
-import com.pultyn.spring_jwt.request.LoginRequest;
-import com.pultyn.spring_jwt.request.RegisterRequest;
 import com.pultyn.spring_jwt.model.Role;
 import com.pultyn.spring_jwt.model.UserEntity;
 import com.pultyn.spring_jwt.repository.RoleRepository;
 import com.pultyn.spring_jwt.repository.UserRepository;
+import com.pultyn.spring_jwt.request.LoginRequest;
+import com.pultyn.spring_jwt.request.RegisterRequest;
 import com.pultyn.spring_jwt.response.LoginResponse;
 import com.pultyn.spring_jwt.response.RegisterResponse;
 import com.pultyn.spring_jwt.security.JwtService;

@@ -1,7 +1,6 @@
 package com.pultyn.spring_jwt.dto;
 
 import com.pultyn.spring_jwt.model.Review;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

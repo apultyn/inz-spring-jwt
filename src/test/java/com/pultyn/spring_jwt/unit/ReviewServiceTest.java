@@ -49,7 +49,7 @@ public class ReviewServiceTest {
 
 
     @Test
-    void getBookReviews_success() throws NotFoundException {
+    void getBookReviews_success() {
         final List<Role> userRole = new ArrayList<>(List.of(new Role(1L, "USER")));
         final UserEntity user1 = new UserEntity(1L, "passwd", "user1@example.com", userRole, new ArrayList<>());
         final UserEntity user2 = new UserEntity(2L, "passwd", "user2@example.com", userRole, new ArrayList<>());

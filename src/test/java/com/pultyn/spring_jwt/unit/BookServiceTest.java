@@ -127,7 +127,7 @@ class BookServiceTest {
     }
 
     @Test
-    void deleteBook_notFound() throws NotFoundException {
+    void deleteBook_notFound() {
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bookService.deleteBook(1L))
                 .isInstanceOf(NotFoundException.class)
@@ -161,7 +161,7 @@ class BookServiceTest {
     }
 
     @Test
-    void updateBook_notFound() throws NotFoundException {
+    void updateBook_notFound() {
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bookService.updateBook(1L, new UpdateBookRequest()))
                 .isInstanceOf(NotFoundException.class)

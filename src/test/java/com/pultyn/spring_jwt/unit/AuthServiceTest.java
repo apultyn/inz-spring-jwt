@@ -77,7 +77,9 @@ public class AuthServiceTest {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
 
         RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD);
-        assertThatThrownBy(() -> authService.register(req)).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> authService.register(req))
+                .isInstanceOf(IllegalArgumentException.class)
+                .message().isEqualTo("User already exists");
     }
 
     @Test
@@ -86,7 +88,9 @@ public class AuthServiceTest {
         when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
 
         RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD);
-        assertThatThrownBy(() -> authService.register(req)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> authService.register(req))
+                .isInstanceOf(IllegalStateException.class)
+                .message().isEqualTo("No default user found");
     }
 
     @Test
@@ -128,7 +132,8 @@ public class AuthServiceTest {
         when(userRepository.findByEmail(req.getEmail())).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> authService.login(req))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(IllegalStateException.class)
+                .message().isEqualTo("User was authenticated but not found be in database");
     }
 
     @Test

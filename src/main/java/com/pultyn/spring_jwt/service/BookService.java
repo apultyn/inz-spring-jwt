@@ -7,6 +7,7 @@ import com.pultyn.spring_jwt.repository.BookRepository;
 import com.pultyn.spring_jwt.request.CreateBookRequest;
 import com.pultyn.spring_jwt.request.UpdateBookRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,7 +38,11 @@ public class BookService {
                 .reviews(new ArrayList<>())
                 .build();
 
-        return new BookDTO(bookRepository.save(book));
+        try {
+            return new BookDTO(bookRepository.save(book));
+        } catch (DataIntegrityViolationException ex) {
+            throw new DataIntegrityViolationException("Book must have unique combination of title and author");
+        }
     }
 
     public void deleteBook(Long bookId) throws NotFoundException {

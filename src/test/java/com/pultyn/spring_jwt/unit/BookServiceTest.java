@@ -47,7 +47,9 @@ class BookServiceTest {
     @Test
     void findBookById_notFound() {
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> bookService.findBookById(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> bookService.findBookById(1L))
+                .isInstanceOf(NotFoundException.class)
+                .message().isEqualTo("Book not found");
     }
 
     @Test
@@ -102,7 +104,8 @@ class BookServiceTest {
         when(bookRepository.save(any(Book.class))).thenThrow(DataIntegrityViolationException.class);
 
         assertThatThrownBy(() -> bookService.createBook(new CreateBookRequest("Title", "Author")))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(DataIntegrityViolationException.class)
+                .message().isEqualTo("Book must have unique combination of title and author");
     }
 
     @Test
@@ -117,12 +120,18 @@ class BookServiceTest {
         doNothing().when(bookRepository).delete(toDelete);
 
         bookService.deleteBook(1L);
+
+        ArgumentCaptor<Book> captor = ArgumentCaptor.forClass(Book.class);
+        verify(bookRepository).delete(captor.capture());
+        assertThat(captor.getValue()).isEqualTo(toDelete);
     }
 
     @Test
     void deleteBook_notFound() throws NotFoundException {
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThatThrownBy(() -> bookService.deleteBook(1L)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> bookService.deleteBook(1L))
+                .isInstanceOf(NotFoundException.class)
+                .message().isEqualTo("Book not found");
     }
 
     @Test
@@ -155,6 +164,7 @@ class BookServiceTest {
     void updateBook_notFound() throws NotFoundException {
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> bookService.updateBook(1L, new UpdateBookRequest()))
-                .isInstanceOf(NotFoundException.class);
+                .isInstanceOf(NotFoundException.class)
+                .message().isEqualTo("Book not found");
     }
 }

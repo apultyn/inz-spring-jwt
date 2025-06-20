@@ -22,10 +22,8 @@ import java.util.stream.Collectors;
 public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private BookService bookService;
 
@@ -42,7 +40,12 @@ public class ReviewService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Long userId = ((CustomUserDetails) auth.getPrincipal()).getId();
 
-        UserEntity user = userService.findUserById(userId);
+        UserEntity user;
+        try {
+            user = userService.findUserById(userId);
+        } catch (NotFoundException ex) {
+            throw new IllegalStateException("User with ID from auth does not exist in database");
+        }
         Book book = bookService.findBookById(createReviewRequest.getBookId());
 
         Review review = Review.builder()
@@ -65,8 +68,8 @@ public class ReviewService {
         Review reviewToUpdate = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review not found"));
 
-        reviewToUpdate.setStars(reviewToUpdate.getStars());
-        reviewToUpdate.setComment(reviewToUpdate.getComment());
+        reviewToUpdate.setStars(reviewRequest.getStars());
+        reviewToUpdate.setComment(reviewRequest.getComment());
 
         reviewRepository.save(reviewToUpdate);
         return new ReviewDTO(reviewToUpdate);

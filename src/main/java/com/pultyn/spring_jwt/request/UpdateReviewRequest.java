@@ -1,13 +1,14 @@
 package com.pultyn.spring_jwt.request;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UpdateReviewRequest {
-    @NotNull(message = "bookId is required")
-    private Long bookId;
-
     @NotNull(message = "stars value required")
     @Min(value = 0, message = "stars value must be between 0 and 5")
     @Max(value = 5, message = "stars value must be between 0 and 5")

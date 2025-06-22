@@ -9,11 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReviewDTO {
+    private Long id;
+    private Long bookId;
     private int stars;
     private String comment;
     private String userEmail;
 
     public ReviewDTO(Review review) {
+        this.id = review.getId();
+        this.bookId = review.getBook().getId();
         this.stars = review.getStars();
         this.comment = review.getComment();
         this.userEmail = review.getUser().getEmail();

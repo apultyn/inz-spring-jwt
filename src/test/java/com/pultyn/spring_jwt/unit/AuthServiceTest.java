@@ -63,7 +63,7 @@ public class AuthServiceTest {
                 new ArrayList<>(List.of(role)),
                 new ArrayList<>());
 
-        RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD);
+        RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD, PASSWORD);
         RegisterResponse res = new RegisterResponse(String.format("%s registered!", EMAIL));
         assertThat(authService.register(req)).isEqualTo(res);
 
@@ -76,7 +76,7 @@ public class AuthServiceTest {
     void register_userExists() {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
 
-        RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD);
+        RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD, PASSWORD);
         assertThatThrownBy(() -> authService.register(req))
                 .isInstanceOf(IllegalArgumentException.class)
                 .message().isEqualTo("User already exists");
@@ -87,7 +87,7 @@ public class AuthServiceTest {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(false);
         when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
 
-        RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD);
+        RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD, PASSWORD);
         assertThatThrownBy(() -> authService.register(req))
                 .isInstanceOf(IllegalStateException.class)
                 .message().isEqualTo("No default user found");

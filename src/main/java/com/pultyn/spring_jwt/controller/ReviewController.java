@@ -1,7 +1,10 @@
 package com.pultyn.spring_jwt.controller;
 
+import com.pultyn.spring_jwt.dto.BookDTO;
 import com.pultyn.spring_jwt.dto.ReviewDTO;
 import com.pultyn.spring_jwt.exceptions.NotFoundException;
+import com.pultyn.spring_jwt.model.Book;
+import com.pultyn.spring_jwt.model.Review;
 import com.pultyn.spring_jwt.request.CreateReviewRequest;
 import com.pultyn.spring_jwt.request.UpdateReviewRequest;
 import com.pultyn.spring_jwt.service.ReviewService;
@@ -25,7 +28,15 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getBookReviews(bookId));
     }
 
+    @GetMapping("/{reviewId}")
+    public ResponseEntity<?> getReview(@NotNull @PathVariable Long reviewId) throws NotFoundException {
+        Review review = reviewService.getReview(reviewId);
+        return ResponseEntity.ok(new ReviewDTO(review));
+    }
+
+
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
     @Transactional
     public ResponseEntity<?> createReview(@Valid @RequestBody CreateReviewRequest createReviewRequest)
             throws NotFoundException {

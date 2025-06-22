@@ -3,7 +3,7 @@
 # Database parameters
 DB_HOST=spring-jwt-db
 DB_USER=root
-DB_PASSWORD=spring-jwt-db
+DB_PASSWORD=my-secret-pwd
 
 echo "Waiting for database to be ready..."
 

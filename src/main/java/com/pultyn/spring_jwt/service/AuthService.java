@@ -39,6 +39,9 @@ public class AuthService {
 
     @Transactional
     public RegisterResponse register(RegisterRequest registerRequest) {
+        if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
+            throw new IllegalArgumentException("Password mismatch");
+        }
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new IllegalArgumentException("User already exists");
         }

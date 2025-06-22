@@ -83,7 +83,7 @@ public class ReviewServiceTest {
         UpdateReviewRequest req = new UpdateReviewRequest(3, "Updated comment");
         ReviewDTO result = reviewService.updateReview(1L, req);
 
-        assertThat(result).isEqualTo(new ReviewDTO(3, "Updated comment", "user1@example.com"));
+        assertThat(result).isEqualTo(new ReviewDTO(1L, 1L, 3, "Updated comment", "user1@example.com"));
 
         ArgumentCaptor<Review> captor = ArgumentCaptor.forClass(Review.class);
         verify(reviewRepository).save(captor.capture());
@@ -157,7 +157,7 @@ public class ReviewServiceTest {
 
             ReviewDTO result = reviewService.createReview(req);
 
-            assertThat(result).isEqualTo(new ReviewDTO(5, "Fine book", "user1@example.com"));
+            assertThat(result).isEqualTo(new ReviewDTO(1L, 1L, 5, "Fine book", "user1@example.com"));
 
             ArgumentCaptor<Review> captor = ArgumentCaptor.forClass(Review.class);
             verify(reviewRepository).save(captor.capture());

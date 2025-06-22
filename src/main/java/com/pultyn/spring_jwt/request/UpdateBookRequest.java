@@ -6,11 +6,11 @@ import lombok.Data;
 
 @Data
 public class UpdateBookRequest {
-    @NotBlank(message = "title required")
-    @Size(max = 255, message = "title may not exceed 255 characters")
+    @NotBlank(message = "Title required")
+    @Size(max = 255, message = "Title may not exceed 255 characters")
     private String title;
 
-    @NotBlank(message = "author required")
-    @Size(max = 255, message = "author may not exceed 255 characters")
+    @NotBlank(message = "Author required")
+    @Size(max = 255, message = "Author may not exceed 255 characters")
     private String author;
 }

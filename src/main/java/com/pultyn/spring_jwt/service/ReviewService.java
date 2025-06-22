@@ -27,6 +27,11 @@ public class ReviewService {
     @Autowired
     private BookService bookService;
 
+    public Review getReview(Long reviewId) throws NotFoundException {
+        return reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new NotFoundException("Review not found"));
+    }
+
     public List<ReviewDTO> getBookReviews(Long bookId) {
         List<Review> reviews = reviewRepository.findByBookId(bookId);
 

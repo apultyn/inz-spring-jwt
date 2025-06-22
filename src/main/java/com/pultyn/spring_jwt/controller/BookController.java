@@ -2,6 +2,7 @@ package com.pultyn.spring_jwt.controller;
 
 import com.pultyn.spring_jwt.dto.BookDTO;
 import com.pultyn.spring_jwt.exceptions.NotFoundException;
+import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.request.CreateBookRequest;
 import com.pultyn.spring_jwt.request.UpdateBookRequest;
 import com.pultyn.spring_jwt.service.BookService;
@@ -21,6 +22,12 @@ import java.util.List;
 public class BookController {
     @Autowired
     private BookService bookService;
+
+    @GetMapping("/{bookId}")
+    public ResponseEntity<?> getBook(@NotNull @PathVariable Long bookId) throws NotFoundException {
+        Book book = bookService.findBookById(bookId);
+        return ResponseEntity.ok(new BookDTO(book));
+    }
 
     @GetMapping("")
     public ResponseEntity<?> getBooks(@RequestParam(defaultValue = "") String searchString) {

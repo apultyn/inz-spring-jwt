@@ -42,7 +42,7 @@ public class BookController {
         return new ResponseEntity<BookDTO>(book, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{bookId}")
+    @PatchMapping("/{bookId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ResponseEntity<BookDTO> updateBook(

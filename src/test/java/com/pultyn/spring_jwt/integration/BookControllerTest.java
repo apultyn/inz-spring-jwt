@@ -170,7 +170,7 @@ public class BookControllerTest {
         { "title":"New Title", "author":"New Author" }
         """;
 
-        mvc.perform(put("/api/books/{id}", book.getId())
+        mvc.perform(patch("/api/books/{id}", book.getId())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content(body))
@@ -189,7 +189,7 @@ public class BookControllerTest {
                 .build());
         String token = jwtService.generateToken(admin);
 
-        mvc.perform(put("/api/books/{id}", 999L)
+        mvc.perform(patch("/api/books/{id}", 999L)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content("{\"title\":\"X\",\"author\":\"Y\"}"))
@@ -209,7 +209,7 @@ public class BookControllerTest {
         Book book = bookRepo.save(Book.builder()
                 .title("T").author("A").build());
 
-        mvc.perform(put("/api/books/{id}", book.getId())
+        mvc.perform(patch("/api/books/{id}", book.getId())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content("{\"title\":\"X\",\"author\":\"Y\"}"))

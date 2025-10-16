@@ -1,0 +1,21 @@
+# Pliki i katalogi Mavena
+target/
+pom.xml.bak
+*.log
+
+# Pliki i katalogi IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Pliki systemowe
+.DS_Store
+Thumbs.db
+
+# Pliki konfiguracyjne środowiska
+.env
+
+# Dokumentacja i inne niepotrzebne pliki
+README.md
+HELP.md

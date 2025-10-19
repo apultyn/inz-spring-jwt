@@ -1,8 +1,7 @@
 package com.pultyn.spring_jwt.service;
 
-import com.pultyn.spring_jwt.model.Role;
+import com.pultyn.spring_jwt.enums.UserRole;
 import com.pultyn.spring_jwt.model.UserEntity;
-import com.pultyn.spring_jwt.repository.RoleRepository;
 import com.pultyn.spring_jwt.repository.UserRepository;
 import com.pultyn.spring_jwt.request.LoginRequest;
 import com.pultyn.spring_jwt.request.RegisterRequest;
@@ -18,15 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 @Service
 public class AuthService {
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -45,13 +40,11 @@ public class AuthService {
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
             throw new IllegalArgumentException("User already exists");
         }
-        Role role = roleRepository.findByName("USER")
-                .orElseThrow(() -> new IllegalStateException("No default user found"));
 
         UserEntity user = UserEntity.builder()
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .roles(Collections.singletonList(role))
+                .role(UserRole.USER)
                 .reviews(new ArrayList<>())
                 .build();
         userRepository.save(user);

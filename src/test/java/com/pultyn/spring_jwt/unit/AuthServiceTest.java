@@ -1,8 +1,7 @@
 package com.pultyn.spring_jwt.unit;
 
-import com.pultyn.spring_jwt.model.Role;
+import com.pultyn.spring_jwt.enums.UserRole;
 import com.pultyn.spring_jwt.model.UserEntity;
-import com.pultyn.spring_jwt.repository.RoleRepository;
 import com.pultyn.spring_jwt.repository.UserRepository;
 import com.pultyn.spring_jwt.request.LoginRequest;
 import com.pultyn.spring_jwt.request.RegisterRequest;
@@ -35,8 +34,6 @@ public class AuthServiceTest {
     @Mock
     UserRepository userRepository;
     @Mock
-    RoleRepository roleRepository;
-    @Mock
     PasswordEncoder passwordEncoder;
     @Mock
     AuthenticationManager authManager;
@@ -52,15 +49,12 @@ public class AuthServiceTest {
     void register_success() {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(false);
 
-        Role role = new Role(1L, "USER");
-        when(roleRepository.findByName("USER")).thenReturn(Optional.of(role));
-
         when(passwordEncoder.encode(PASSWORD)).thenReturn(PASSWORD);
         UserEntity user = new UserEntity(
                 null,
                 PASSWORD,
                 EMAIL,
-                new ArrayList<>(List.of(role)),
+                UserRole.USER,
                 new ArrayList<>());
 
         RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD, PASSWORD);
@@ -83,17 +77,6 @@ public class AuthServiceTest {
     }
 
     @Test
-    void register_missingUserRole() {
-        when(userRepository.existsByEmail(EMAIL)).thenReturn(false);
-        when(roleRepository.findByName("USER")).thenReturn(Optional.empty());
-
-        RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD, PASSWORD);
-        assertThatThrownBy(() -> authService.register(req))
-                .isInstanceOf(IllegalStateException.class)
-                .message().isEqualTo("No default user found");
-    }
-
-    @Test
     void login_success() {
         LoginRequest req = new LoginRequest(EMAIL, PASSWORD);
 
@@ -106,7 +89,7 @@ public class AuthServiceTest {
                 .email(EMAIL)
                 .password(PASSWORD)
                 .reviews(new ArrayList<>())
-                .roles(List.of(new Role(1L, "USER")))
+                .role(UserRole.USER)
                 .build();
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
 

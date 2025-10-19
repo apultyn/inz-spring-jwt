@@ -1,10 +1,10 @@
 package com.pultyn.spring_jwt.unit;
 
 import com.pultyn.spring_jwt.dto.ReviewDTO;
+import com.pultyn.spring_jwt.enums.UserRole;
 import com.pultyn.spring_jwt.exceptions.NotFoundException;
 import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.model.Review;
-import com.pultyn.spring_jwt.model.Role;
 import com.pultyn.spring_jwt.model.UserEntity;
 import com.pultyn.spring_jwt.repository.ReviewRepository;
 import com.pultyn.spring_jwt.request.CreateReviewRequest;
@@ -50,9 +50,8 @@ public class ReviewServiceTest {
 
     @Test
     void getBookReviews_success() {
-        final List<Role> userRole = new ArrayList<>(List.of(new Role(1L, "USER")));
-        final UserEntity user1 = new UserEntity(1L, "passwd", "user1@example.com", userRole, new ArrayList<>());
-        final UserEntity user2 = new UserEntity(2L, "passwd", "user2@example.com", userRole, new ArrayList<>());
+        final UserEntity user1 = new UserEntity(1L, "passwd", "user1@example.com", UserRole.USER, new ArrayList<>());
+        final UserEntity user2 = new UserEntity(2L, "passwd", "user2@example.com", UserRole.USER, new ArrayList<>());
         final Book book = new Book(1L, "Title 1", "Author", new ArrayList<>());
 
         List<Review> reviews = new ArrayList<>(List.of(
@@ -73,7 +72,7 @@ public class ReviewServiceTest {
 
     @Test
     void updateReview_success() throws NotFoundException {
-        final UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", new ArrayList<>(), new ArrayList<>());
+        final UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", UserRole.USER, new ArrayList<>());
         final Book book = new Book(1L, "Title 1", "Author", new ArrayList<>());
         Review review = new Review(1L, 5, "Comment 1", user, book);
 
@@ -104,7 +103,7 @@ public class ReviewServiceTest {
 
     @Test
     void deleteReview_success() throws NotFoundException {
-        final UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", new ArrayList<>(), new ArrayList<>());
+        final UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", UserRole.USER, new ArrayList<>());
         final Book book = new Book(1L, "Title 1", "Author", new ArrayList<>());
         Review review = new Review(1L, 5, "Comment 1", user, book);
         when(reviewRepository.findById(1L)).thenReturn(Optional.of(review));
@@ -144,7 +143,7 @@ public class ReviewServiceTest {
 
         @Test
         void createReview_success() throws NotFoundException {
-            UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", new ArrayList<>(), new ArrayList<>());
+            UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", UserRole.USER, new ArrayList<>());
             when(userService.findUserById(1L)).thenReturn(user);
 
             Book book = new Book(1L, "Title 1", "Author", new ArrayList<>());
@@ -190,7 +189,7 @@ public class ReviewServiceTest {
 
         @Test
         void createReview_duplicateReview() throws NotFoundException {
-            final UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", new ArrayList<>(), new ArrayList<>());
+            final UserEntity user = new UserEntity(1L, "passwd", "user1@example.com", UserRole.USER, new ArrayList<>());
             when(userService.findUserById(1L)).thenReturn(user);
 
             final Book book = new Book(1L, "Title 1", "Author", new ArrayList<>());

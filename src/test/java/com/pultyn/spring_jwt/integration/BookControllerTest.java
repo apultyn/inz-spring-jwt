@@ -2,11 +2,10 @@ package com.pultyn.spring_jwt.integration;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pultyn.spring_jwt.enums.UserRole;
 import com.pultyn.spring_jwt.model.Book;
-import com.pultyn.spring_jwt.model.Role;
 import com.pultyn.spring_jwt.model.UserEntity;
 import com.pultyn.spring_jwt.repository.BookRepository;
-import com.pultyn.spring_jwt.repository.RoleRepository;
 import com.pultyn.spring_jwt.repository.UserRepository;
 import com.pultyn.spring_jwt.security.JwtService;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,8 +55,6 @@ public class BookControllerTest {
     @Autowired
     JwtService jwtService;
     @Autowired
-    RoleRepository roleRepo;
-    @Autowired
     UserRepository userRepo;
     @Autowired
     ObjectMapper mapper;
@@ -72,7 +69,6 @@ public class BookControllerTest {
     void purgeDb() {
         bookRepo.deleteAll();
         userRepo.deleteAll();
-        roleRepo.deleteAll();
         SecurityContextHolder.clearContext();
     }
 
@@ -113,11 +109,10 @@ public class BookControllerTest {
 
     @Test
     void createBook_admin_success() throws Exception {
-        Role adminRole = roleRepo.save(new Role(null, "ADMIN"));
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}pw")
-                .roles(List.of(adminRole))
+                .role(UserRole.ADMIN)
                 .build());
 
         String token = jwtService.generateToken(admin);
@@ -137,11 +132,10 @@ public class BookControllerTest {
 
     @Test
     void createBook_user_forbidden() throws Exception {
-        Role userRole = roleRepo.save(new Role(null, "ROLE_USER"));
         UserEntity user = userRepo.save(UserEntity.builder()
                 .email("user@example.com")
                 .password("{noop}pw")
-                .roles(List.of(userRole))
+                .role(UserRole.USER)
                 .build());
 
         String token = jwtService.generateToken(user);
@@ -158,11 +152,10 @@ public class BookControllerTest {
         Book book = bookRepo.save(Book.builder()
                 .title("Old").author("Some One").build());
 
-        Role adminRole = roleRepo.save(new Role(null, "ADMIN"));
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}pw")
-                .roles(List.of(adminRole))
+                .role(UserRole.ADMIN)
                 .build());
         String token = jwtService.generateToken(admin);
 
@@ -181,11 +174,10 @@ public class BookControllerTest {
 
     @Test
     void updateBook_notFound_returns404() throws Exception {
-        Role adminRole = roleRepo.save(new Role(null, "ADMIN"));
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}pw")
-                .roles(List.of(adminRole))
+                .role(UserRole.ADMIN)
                 .build());
         String token = jwtService.generateToken(admin);
 
@@ -198,11 +190,10 @@ public class BookControllerTest {
 
     @Test
     void updateBook_user_forbidden() throws Exception {
-        Role userRole = roleRepo.save(new Role(null, "USER"));
         UserEntity user = userRepo.save(UserEntity.builder()
                 .email("user@example.com")
                 .password("{noop}pw")
-                .roles(List.of(userRole))
+                .role(UserRole.USER)
                 .build());
         String token = jwtService.generateToken(user);
 
@@ -218,12 +209,10 @@ public class BookControllerTest {
 
     @Test
     void deleteBook_success() throws Exception {
-        Role adminRole = roleRepo.save(new Role(null, "ADMIN"));
-
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}dummy")
-                .roles(List.of(adminRole))
+                .role(UserRole.ADMIN)
                 .build());
 
         Book book = bookRepo.save(Book.builder()
@@ -237,12 +226,10 @@ public class BookControllerTest {
 
     @Test
     void deleteBook_user() throws Exception {
-        Role userRole = roleRepo.save(new Role(null, "USER"));
-
         UserEntity user = userRepo.save(UserEntity.builder()
                 .email("user@example.com")
                 .password("{noop}pw")
-                .roles(List.of(userRole))
+                .role(UserRole.USER)
                 .build());
 
         Book book = bookRepo.save(Book.builder()

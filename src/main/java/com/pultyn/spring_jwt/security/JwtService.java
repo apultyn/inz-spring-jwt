@@ -1,7 +1,5 @@
 package com.pultyn.spring_jwt.security;
 
-import com.pultyn.spring_jwt.dto.RoleDTO;
-import com.pultyn.spring_jwt.model.Role;
 import com.pultyn.spring_jwt.model.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -39,9 +37,7 @@ public class JwtService {
         return Jwts
                 .builder()
                 .subject(user.getEmail())
-                .claim("roles", user.getRoles().stream()
-                        .map(RoleDTO::new)
-                        .collect(Collectors.toSet()))
+                .claim("role", user.getRole().name())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getKey())

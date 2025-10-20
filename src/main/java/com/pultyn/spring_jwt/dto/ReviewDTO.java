@@ -10,16 +10,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewDTO {
     private Long id;
-    private Long bookId;
+    private Long book_id;
     private int stars;
     private String comment;
-    private String userEmail;
+    private String user_email;
 
     public ReviewDTO(Review review) {
         this.id = review.getId();
-        this.bookId = review.getBook().getId();
+        this.book_id = review.getBook().getId();
         this.stars = review.getStars();
         this.comment = review.getComment();
-        this.userEmail = review.getUser().getEmail();
+        this.user_email = review.getUser().getEmail();
     }
 }

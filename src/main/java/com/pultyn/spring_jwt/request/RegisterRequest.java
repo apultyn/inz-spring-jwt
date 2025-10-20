@@ -14,10 +14,10 @@ public class RegisterRequest {
     @Size(max = 255, message = "Email length must not exceed 255 characters")
     private String email;
 
-    @NotBlank(message = "Password may not be blank")
+    @NotBlank(message = "Password must not be blank")
     @Size(min = 6, max = 100, message = "Password must be between 6-100 characters")
     private String password;
 
     @NotBlank(message = "Password must be confirmed")
-    private String confirmPassword;
+    private String confirm_password;
 }

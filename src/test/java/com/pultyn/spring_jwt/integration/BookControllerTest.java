@@ -121,7 +121,7 @@ public class BookControllerTest {
             { "title":"Clean Code", "author":"Robert C. Martin" }
         """;
 
-        mvc.perform(post("/api/books/create")
+        mvc.perform(post("/api/books")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content(body))
@@ -140,7 +140,7 @@ public class BookControllerTest {
 
         String token = jwtService.generateToken(user);
 
-        mvc.perform(post("/api/books/create")
+        mvc.perform(post("/api/books")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content("{\"title\":\"X\",\"author\":\"Y\"}"))

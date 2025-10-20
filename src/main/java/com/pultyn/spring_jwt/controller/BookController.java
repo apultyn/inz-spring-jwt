@@ -13,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/books")
+@Validated
 public class BookController {
     @Autowired
     private BookService bookService;
@@ -35,7 +37,7 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
-    @PostMapping("/create")
+    @PostMapping("")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> createBook(@Valid @RequestBody CreateBookRequest bookRequest) {
         BookDTO book = bookService.createBook(bookRequest);

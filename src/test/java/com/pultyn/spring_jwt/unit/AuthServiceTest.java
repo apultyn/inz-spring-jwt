@@ -1,5 +1,6 @@
 package com.pultyn.spring_jwt.unit;
 
+import com.pultyn.spring_jwt.dto.UserDTO;
 import com.pultyn.spring_jwt.enums.UserRole;
 import com.pultyn.spring_jwt.model.UserEntity;
 import com.pultyn.spring_jwt.repository.UserRepository;
@@ -22,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,7 +58,7 @@ public class AuthServiceTest {
                 new ArrayList<>());
 
         RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD, PASSWORD);
-        RegisterResponse res = new RegisterResponse(String.format("%s registered!", EMAIL));
+        RegisterResponse res = new RegisterResponse(String.format("%s registered!", EMAIL), new UserDTO(user));
         assertThat(authService.register(req)).isEqualTo(res);
 
         ArgumentCaptor<UserEntity> captor = ArgumentCaptor.forClass(UserEntity.class);
@@ -99,7 +99,7 @@ public class AuthServiceTest {
         LoginResponse res = authService.login(req);
 
         assertThat(res.getToken()).isEqualTo("token");
-        assertThat(res.getExpiresIn()).isEqualTo(3_600_000L);
+        assertThat(res.getExpires_in()).isEqualTo(3_600_000L);
 
         verify(authManager).authenticate(
                 argThat(t -> t.getPrincipal().equals(EMAIL) &&

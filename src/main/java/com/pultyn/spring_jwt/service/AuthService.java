@@ -1,5 +1,6 @@
 package com.pultyn.spring_jwt.service;
 
+import com.pultyn.spring_jwt.dto.UserDTO;
 import com.pultyn.spring_jwt.enums.UserRole;
 import com.pultyn.spring_jwt.model.UserEntity;
 import com.pultyn.spring_jwt.repository.UserRepository;
@@ -34,7 +35,7 @@ public class AuthService {
 
     @Transactional
     public RegisterResponse register(RegisterRequest registerRequest) {
-        if (!registerRequest.getPassword().equals(registerRequest.getConfirmPassword())) {
+        if (!registerRequest.getPassword().equals(registerRequest.getConfirm_password())) {
             throw new IllegalArgumentException("Password mismatch");
         }
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
@@ -48,7 +49,7 @@ public class AuthService {
                 .reviews(new ArrayList<>())
                 .build();
         userRepository.save(user);
-        return new RegisterResponse(String.format("%s registered!", user.getEmail()));
+        return new RegisterResponse(String.format("%s registered!", user.getEmail()), new UserDTO(user));
     }
 
     public LoginResponse login(LoginRequest loginRequest) {

@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class LoginResponse {
     private String token;
-    private Long expiresIn;
+    private Long expires_in;
 }

@@ -15,10 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/reviews")
+@Validated
 public class ReviewController {
     @Autowired
     private ReviewService reviewService;
@@ -35,7 +37,7 @@ public class ReviewController {
     }
 
 
-    @PostMapping("/create")
+    @PostMapping("")
     @PreAuthorize("hasRole('USER')")
     @Transactional
     public ResponseEntity<?> createReview(@Valid @RequestBody CreateReviewRequest createReviewRequest)
@@ -44,7 +46,7 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(review, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{reviewId}")
+    @PatchMapping("/{reviewId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public ResponseEntity<ReviewDTO> updateReview(

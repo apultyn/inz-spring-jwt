@@ -53,7 +53,7 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
-        Authentication auth = authManager.authenticate(
+        authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())

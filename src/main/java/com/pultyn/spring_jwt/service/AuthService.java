@@ -57,7 +57,7 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
         );
         UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
-                .orElseThrow(() -> new IllegalStateException("User was authenticated but not found be in database"));
+                .orElseThrow(() -> new IllegalStateException("User was authenticated but not found in database"));
         String jwtToken = jwtService.generateToken(user);
         return new LoginResponse(jwtToken, jwtService.getJwtExpiration());
     }

@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -54,7 +55,7 @@ public class AuthServiceTest {
                 null,
                 PASSWORD,
                 EMAIL,
-                UserRole.USER,
+                Set.of(UserRole.BOOK_USER),
                 new ArrayList<>());
 
         RegisterRequest req = new RegisterRequest(EMAIL, PASSWORD, PASSWORD);
@@ -89,7 +90,7 @@ public class AuthServiceTest {
                 .email(EMAIL)
                 .password(PASSWORD)
                 .reviews(new ArrayList<>())
-                .role(UserRole.USER)
+                .roles(Set.of(UserRole.BOOK_USER))
                 .build();
         when(userRepository.findByEmail(EMAIL)).thenReturn(Optional.of(user));
 
@@ -116,7 +117,7 @@ public class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(req))
                 .isInstanceOf(IllegalStateException.class)
-                .message().isEqualTo("User was authenticated but not found be in database");
+                .message().isEqualTo("User was authenticated but not found in database");
     }
 
     @Test

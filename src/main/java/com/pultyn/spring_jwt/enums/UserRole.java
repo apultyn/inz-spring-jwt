@@ -1,6 +1,6 @@
 package com.pultyn.spring_jwt.enums;
 
 public enum UserRole {
-    USER,
-    ADMIN
+    BOOK_USER,
+    BOOK_ADMIN
 }

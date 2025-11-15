@@ -38,14 +38,14 @@ public class BookController {
     }
 
     @PostMapping("")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('BOOK_ADMIN')")
     public ResponseEntity<?> createBook(@Valid @RequestBody CreateBookRequest bookRequest) {
         BookDTO book = bookService.createBook(bookRequest);
         return new ResponseEntity<BookDTO>(book, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{bookId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('BOOK_ADMIN')")
     @Transactional
     public ResponseEntity<BookDTO> updateBook(
             @NotNull @PathVariable Long bookId,
@@ -56,7 +56,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{bookId}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('BOOK_ADMIN')")
     @Transactional
     public ResponseEntity<?> deleteBook(@NotNull @PathVariable Long bookId) throws NotFoundException {
         bookService.deleteBook(bookId);

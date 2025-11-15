@@ -27,5 +27,6 @@ public class Book {
     private String author;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @Builder.Default
     private List<Review> reviews = new ArrayList<>();
 }

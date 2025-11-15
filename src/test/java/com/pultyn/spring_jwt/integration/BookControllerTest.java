@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.hasSize;
 
-import java.util.List;
+import java.util.Set;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -112,7 +112,7 @@ public class BookControllerTest {
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}pw")
-                .role(UserRole.ADMIN)
+                .roles(Set.of(UserRole.BOOK_ADMIN, UserRole.BOOK_USER))
                 .build());
 
         String token = jwtService.generateToken(admin);
@@ -135,7 +135,7 @@ public class BookControllerTest {
         UserEntity user = userRepo.save(UserEntity.builder()
                 .email("user@example.com")
                 .password("{noop}pw")
-                .role(UserRole.USER)
+                .roles(Set.of(UserRole.BOOK_USER))
                 .build());
 
         String token = jwtService.generateToken(user);
@@ -155,7 +155,7 @@ public class BookControllerTest {
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}pw")
-                .role(UserRole.ADMIN)
+                .roles(Set.of(UserRole.BOOK_ADMIN, UserRole.BOOK_USER))
                 .build());
         String token = jwtService.generateToken(admin);
 
@@ -177,7 +177,7 @@ public class BookControllerTest {
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}pw")
-                .role(UserRole.ADMIN)
+                .roles(Set.of(UserRole.BOOK_ADMIN, UserRole.BOOK_USER))
                 .build());
         String token = jwtService.generateToken(admin);
 
@@ -193,7 +193,7 @@ public class BookControllerTest {
         UserEntity user = userRepo.save(UserEntity.builder()
                 .email("user@example.com")
                 .password("{noop}pw")
-                .role(UserRole.USER)
+                .roles(Set.of(UserRole.BOOK_USER))
                 .build());
         String token = jwtService.generateToken(user);
 
@@ -212,7 +212,7 @@ public class BookControllerTest {
         UserEntity admin = userRepo.save(UserEntity.builder()
                 .email("admin@example.com")
                 .password("{noop}dummy")
-                .role(UserRole.ADMIN)
+                .roles(Set.of(UserRole.BOOK_ADMIN, UserRole.BOOK_USER))
                 .build());
 
         Book book = bookRepo.save(Book.builder()
@@ -229,7 +229,7 @@ public class BookControllerTest {
         UserEntity user = userRepo.save(UserEntity.builder()
                 .email("user@example.com")
                 .password("{noop}pw")
-                .role(UserRole.USER)
+                .roles(Set.of(UserRole.BOOK_USER))
                 .build());
 
         Book book = bookRepo.save(Book.builder()

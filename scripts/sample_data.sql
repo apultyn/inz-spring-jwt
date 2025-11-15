@@ -3,11 +3,11 @@ DELETE FROM books WHERE true;
 DELETE FROM users WHERE true;
 DELETE FROM user_roles WHERE true;
 
-INSERT INTO user_roles (name) VALUES ('BOOK_USER', 'BOOK_ADMIN')
+INSERT INTO users (email, password) VALUES
+    ("apultyn@example.com", "$2a$12$G5kS20cTB/x/tGuY5.rAE.Q7WDG0UpYEUCblKXqj3mnDzBtnLlTTK"),
+    ("bpultyn@example.com", "$2a$12$G5kS20cTB/x/tGuY5.rAE.Q7WDG0UpYEUCblKXqj3mnDzBtnLlTTK");
 
-INSERT INTO users (email, password) VALUES ("apultyn@example.com", "$2a$12$G5kS20cTB/x/tGuY5.rAE.Q7WDG0UpYEUCblKXqj3mnDzBtnLlTTK");
-INSERT INTO users (email, password) VALUES ("bpultyn@example.com", "$2a$12$G5kS20cTB/x/tGuY5.rAE.Q7WDG0UpYEUCblKXqj3mnDzBtnLlTTK");
-
+INSERT INTO user_roles (name) VALUES (1, 'BOOK_USER'), (1, 'BOOK_ADMIN'), (2, 'BOOK_USER')
 
 INSERT INTO books (author, title) VALUES
 ('J.K. Rowling', 'Harry Potter and the Philosopher\'s Stone'),

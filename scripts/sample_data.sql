@@ -7,7 +7,7 @@ INSERT INTO users (email, password) VALUES
     ("apultyn@example.com", "$2a$12$G5kS20cTB/x/tGuY5.rAE.Q7WDG0UpYEUCblKXqj3mnDzBtnLlTTK"),
     ("bpultyn@example.com", "$2a$12$G5kS20cTB/x/tGuY5.rAE.Q7WDG0UpYEUCblKXqj3mnDzBtnLlTTK");
 
-INSERT INTO user_roles (name) VALUES (1, 'BOOK_USER'), (1, 'BOOK_ADMIN'), (2, 'BOOK_USER')
+INSERT INTO user_roles (user_id, role_name) VALUES (1, 'BOOK_USER'), (1, 'BOOK_ADMIN'), (2, 'BOOK_USER');
 
 INSERT INTO books (author, title) VALUES
 ('J.K. Rowling', 'Harry Potter and the Philosopher\'s Stone'),

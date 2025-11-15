@@ -35,6 +35,7 @@ public class UserEntity {
             joinColumns = @JoinColumn(name = "user_id")
     )
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     @Column(name = "role_name")
     private Set<UserRole> roles = new HashSet<>();
 

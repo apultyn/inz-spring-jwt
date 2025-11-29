@@ -76,7 +76,7 @@ public class BookControllerTest {
     void getBook_success() throws Exception {
         Book book = bookRepo.save(Book.builder()
                 .title("Clean Code").author("Robert C. Martin").build());
-        mvc.perform(get("/api/books/{id}", book.getId()))
+        mvc.perform(get("/api/books/{id}/", book.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(book.getId()));
     }
@@ -89,7 +89,7 @@ public class BookControllerTest {
                 .title("Dirty Code 1").author("Robert C. Martin").build());
         Book book3 = bookRepo.save(Book.builder()
                 .title("Dirty Code 2").author("Robert C. Martin").build());
-        mvc.perform(get("/api/books"))
+        mvc.perform(get("/api/books/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)));
     }
@@ -102,7 +102,7 @@ public class BookControllerTest {
                 .title("Dirty Code 1").author("Robert C. Martin").build());
         Book book3 = bookRepo.save(Book.builder()
                 .title("Dirty Code 2").author("Robert C. Martin").build());
-        mvc.perform(get("/api/books?searchString=Dirty"))
+        mvc.perform(get("/api/books/?searchString=Dirty"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -121,7 +121,7 @@ public class BookControllerTest {
             { "title":"Clean Code", "author":"Robert C. Martin" }
         """;
 
-        mvc.perform(post("/api/books")
+        mvc.perform(post("/api/books/")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content(body))
@@ -140,11 +140,19 @@ public class BookControllerTest {
 
         String token = jwtService.generateToken(user);
 
-        mvc.perform(post("/api/books")
+        mvc.perform(post("/api/books/")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content("{\"title\":\"X\",\"author\":\"Y\"}"))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void createBook_unauth() throws Exception {
+        mvc.perform(post("/api/books/")
+                        .contentType("application/json")
+                        .content("{\"title\":\"X\",\"author\":\"Y\"}"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -163,7 +171,7 @@ public class BookControllerTest {
         { "title":"New Title", "author":"New Author" }
         """;
 
-        mvc.perform(patch("/api/books/{id}", book.getId())
+        mvc.perform(patch("/api/books/{id}/", book.getId())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content(body))
@@ -181,7 +189,7 @@ public class BookControllerTest {
                 .build());
         String token = jwtService.generateToken(admin);
 
-        mvc.perform(patch("/api/books/{id}", 999L)
+        mvc.perform(patch("/api/books/{id}/", 999L)
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content("{\"title\":\"X\",\"author\":\"Y\"}"))
@@ -200,7 +208,7 @@ public class BookControllerTest {
         Book book = bookRepo.save(Book.builder()
                 .title("T").author("A").build());
 
-        mvc.perform(patch("/api/books/{id}", book.getId())
+        mvc.perform(patch("/api/books/{id}/", book.getId())
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                         .contentType("application/json")
                         .content("{\"title\":\"X\",\"author\":\"Y\"}"))
@@ -219,7 +227,7 @@ public class BookControllerTest {
                 .title("Clean Code").author("Robert C. Martin").build());
         String token = jwtService.generateToken(admin);
 
-        mvc.perform(delete("/api/books/{id}", book.getId())
+        mvc.perform(delete("/api/books/{id}/", book.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isNoContent());
     }
@@ -237,7 +245,7 @@ public class BookControllerTest {
 
         String token = jwtService.generateToken(user);
 
-        mvc.perform(delete("/api/books/{id}", book.getId())
+        mvc.perform(delete("/api/books/{id}/", book.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isForbidden());
     }

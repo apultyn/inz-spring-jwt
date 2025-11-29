@@ -25,19 +25,19 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping("")
+    @GetMapping("/")
     public ResponseEntity<?> getBookReviews(@RequestParam Long bookId) {
         return ResponseEntity.ok(reviewService.getBookReviews(bookId));
     }
 
-    @GetMapping("/{reviewId}")
+    @GetMapping("/{reviewId}/")
     public ResponseEntity<?> getReview(@NotNull @PathVariable Long reviewId) throws NotFoundException {
         Review review = reviewService.getReview(reviewId);
         return ResponseEntity.ok(new ReviewDTO(review));
     }
 
 
-    @PostMapping("")
+    @PostMapping("/")
     @PreAuthorize("hasRole('BOOK_USER')")
     @Transactional
     public ResponseEntity<?> createReview(@Valid @RequestBody CreateReviewRequest createReviewRequest)
@@ -46,7 +46,7 @@ public class ReviewController {
         return new ResponseEntity<ReviewDTO>(review, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{reviewId}")
+    @PatchMapping("/{reviewId}/")
     @PreAuthorize("hasRole('BOOK_ADMIN')")
     @Transactional
     public ResponseEntity<ReviewDTO> updateReview(
@@ -57,7 +57,7 @@ public class ReviewController {
         return ResponseEntity.ok(review);
     }
 
-    @DeleteMapping("/{reviewId}")
+    @DeleteMapping("/{reviewId}/")
     @PreAuthorize("hasRole('BOOK_ADMIN')")
     @Transactional
     public ResponseEntity<?> deleteReview(@NotNull @PathVariable Long reviewId) throws NotFoundException {

@@ -25,26 +25,26 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @GetMapping("/{bookId}")
+    @GetMapping("/{bookId}/")
     public ResponseEntity<?> getBook(@NotNull @PathVariable Long bookId) throws NotFoundException {
         Book book = bookService.findBookById(bookId);
         return ResponseEntity.ok(new BookDTO(book));
     }
 
-    @GetMapping("")
+    @GetMapping("/")
     public ResponseEntity<?> getBooks(@RequestParam(defaultValue = "") String searchString) {
         List<BookDTO> books = bookService.getBooks(searchString);
         return ResponseEntity.ok(books);
     }
 
-    @PostMapping("")
+    @PostMapping("/")
     @PreAuthorize("hasRole('BOOK_ADMIN')")
     public ResponseEntity<?> createBook(@Valid @RequestBody CreateBookRequest bookRequest) {
         BookDTO book = bookService.createBook(bookRequest);
         return new ResponseEntity<BookDTO>(book, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{bookId}")
+    @PatchMapping("/{bookId}/")
     @PreAuthorize("hasRole('BOOK_ADMIN')")
     @Transactional
     public ResponseEntity<BookDTO> updateBook(
@@ -55,7 +55,7 @@ public class BookController {
         return ResponseEntity.ok(updatedBook);
     }
 
-    @DeleteMapping("/{bookId}")
+    @DeleteMapping("/{bookId}/")
     @PreAuthorize("hasRole('BOOK_ADMIN')")
     @Transactional
     public ResponseEntity<?> deleteBook(@NotNull @PathVariable Long bookId) throws NotFoundException {

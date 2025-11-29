@@ -73,8 +73,13 @@ public class ReviewService {
         Review reviewToUpdate = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new NotFoundException("Review not found"));
 
-        reviewToUpdate.setStars(reviewRequest.getStars());
-        reviewToUpdate.setComment(reviewRequest.getComment());
+        if (reviewRequest.getStars() != null) {
+            reviewToUpdate.setStars(reviewRequest.getStars());
+        }
+
+        if (reviewRequest.getComment() != null) {
+            reviewToUpdate.setComment(reviewRequest.getComment());
+        }
 
         reviewRepository.save(reviewToUpdate);
         return new ReviewDTO(reviewToUpdate);

@@ -56,8 +56,13 @@ public class BookService {
         Book bookToUpdate = bookRepository.findById(bookId)
                 .orElseThrow(() -> new NotFoundException("Book not found"));
 
-        bookToUpdate.setAuthor(bookRequest.getAuthor());
-        bookToUpdate.setTitle(bookRequest.getTitle());
+        if (bookRequest.getAuthor() != null) {
+            bookToUpdate.setAuthor(bookRequest.getAuthor());
+        }
+
+        if (bookRequest.getTitle() != null) {
+            bookToUpdate.setTitle(bookRequest.getTitle());
+        }
 
         bookRepository.save(bookToUpdate);
 

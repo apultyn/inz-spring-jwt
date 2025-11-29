@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateReviewRequest {
-    @NotNull(message = "Stars value required")
     @Min(value = 0, message = "Stars value must be between 0 and 5")
     @Max(value = 5, message = "Stars value must be between 0 and 5")
-    private int stars;
+    private Integer stars;
 
-    @NotBlank(message = "Comment required")
     @Size(max = 2000, message = "Comment may not exceed 2000 characters")
     private String comment;
 }

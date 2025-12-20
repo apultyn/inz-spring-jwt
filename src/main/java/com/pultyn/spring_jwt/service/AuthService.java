@@ -42,8 +42,6 @@ public class AuthService {
             throw new IllegalArgumentException("User already exists");
         }
 
-
-
         UserEntity user = UserEntity.builder()
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))

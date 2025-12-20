@@ -1,9 +1,7 @@
 package com.pultyn.spring_jwt.controller;
 
-import com.pultyn.spring_jwt.dto.BookDTO;
 import com.pultyn.spring_jwt.dto.ReviewDTO;
 import com.pultyn.spring_jwt.exceptions.NotFoundException;
-import com.pultyn.spring_jwt.model.Book;
 import com.pultyn.spring_jwt.model.Review;
 import com.pultyn.spring_jwt.request.CreateReviewRequest;
 import com.pultyn.spring_jwt.request.UpdateReviewRequest;
